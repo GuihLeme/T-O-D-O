@@ -1,0 +1,25 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+
+  h1 {
+    font-size: 1.875rem;
+    color: var(--very-light-gray);
+  }
+
+  button {
+    border: none;
+    background: transparent;
+
+    img {
+      width: 1.75rem;
+      height: 1.75rem;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
