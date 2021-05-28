@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 
 interface ToDoRepo {
+  id: string;
   todo: string;
   isCompleted: boolean;
 }

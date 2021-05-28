@@ -34,6 +34,23 @@
     .containerTodo {
 
       margin-top: 1.5rem;
+      // background-color: red;
+
+      ul {
+        list-style: none;
+        border-radius: .25rem .25rem 0 0;
+
+
+        li:first-child {
+          > div:first-child {
+            border-radius: .25rem .25rem 0 0;
+          }
+        }
+
+        li:not(:first-child) {
+          border-top: 1px solid var(--light-grayish-blue);
+        }
+      }
 
       .footerTodo {
         display: flex;
@@ -81,6 +98,18 @@
             color: var(--bright-blue);
           }
         }
+      }
+    }
+
+    .reorder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 3rem;
+
+      p {
+        font-size: .75rem;
       }
     }
   }

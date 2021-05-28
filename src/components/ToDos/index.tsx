@@ -5,8 +5,10 @@ import { useRepo } from '../../hooks/repositories';
 import styles from './styles.module.scss';
 
 interface ToDoProps {
+  selector: string;
   todo: string;
   isCompleted: boolean;
+  forwardRef: any;
 }
 
 interface ToDoRepo {
@@ -14,7 +16,7 @@ interface ToDoRepo {
   isCompleted: boolean;
 }
 
-const ToDos: React.FC<ToDoProps> = ({ todo, isCompleted }) => {
+const ToDos: React.FC<ToDoProps> = ({ selector, todo, isCompleted }, ...rest) => {
   const [isChecked, setIsChecked] = useState(isCompleted);
 
   const { todoRepo, setTodoRepo } = useRepo();
@@ -23,24 +25,21 @@ const ToDos: React.FC<ToDoProps> = ({ todo, isCompleted }) => {
   const toggleCheckbox = useCallback(() => {
     setIsChecked(!isChecked);
 
-    todoRepo.map(task => {
-      if(task.todo === todo) {
-        let { isCompleted } = task
-        isCompleted = isChecked;
-        setTodoRepo((state: ToDoRepo[]) => {
-          return {...state, task}
-        })
+    todoRepo.map((task, index) => {
+      if(task.id === selector) {
+
+        const newRepo = [...todoRepo];
+
+        newRepo[index].isCompleted = !isChecked;
+
+        setTodoRepo(newRepo);
       }
-    })  //TRYING TO FIGURE OUT HOW DO I UPDATE THIS ELEMENT
-
-  }, [isChecked])
-
-
-
+    })
+  }, [isChecked, todoRepo])
 
   return (
 
-      <div className={styles.todo}>
+      <div className={styles.todo} {...rest}>
         <div className={isChecked ? styles.checked : styles.checkbox} onClick={toggleCheckbox}>
           <svg xmlns="http://www.w3.org/2000/svg" width="11" height="9">
             <path fill="none" stroke="#FFF" strokeWidth="2" d="M1 4.304L3.696 7l6-6" />

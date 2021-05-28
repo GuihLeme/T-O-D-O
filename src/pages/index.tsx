@@ -1,7 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { useHistory } from 'react-router-dom';
+import { parse, v4 as uuid } from 'uuid';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+
 
 import Header from '../components/Header';
 import Input from '../components/Input';
@@ -20,26 +22,26 @@ interface ToDoRepoData {
 const Home: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const [isAllSelected, setIsAllSelected] = useState(false);
+  const [isAllSelected, setIsAllSelected] = useState(true);
   const [isActiveSelected, setIsActiveSelected] = useState(false);
   const [isCompletedSelected, setIsCompletedSelected] = useState(false);
 
   const { todoRepo, setTodoRepo} = useRepo();
 
-  const toggleAll = () => {
-    setIsAllSelected(!isAllSelected);
+  const selectAll = () => {
+    setIsAllSelected(true);
     setIsActiveSelected(false);
-    setIsCompletedSelected(false);
+    setIsCompletedSelected(false);;
   }
 
-  const toggleActive = () => {
-    setIsActiveSelected(!isActiveSelected);
+  const selectActive = () => {
+    setIsActiveSelected(true);
     setIsAllSelected(false);
     setIsCompletedSelected(false);
   }
 
-  const toggleCompleted = () => {
-    setIsCompletedSelected(!isCompletedSelected);
+  const selectCompleted = () => {
+    setIsCompletedSelected(true);
     setIsAllSelected(false);
     setIsActiveSelected(false);
   }
@@ -50,20 +52,57 @@ const Home: React.FC = () => {
     }
   }, [todoRepo])
 
+  let filteredRepo = Array.from(todoRepo);
+
+  if(isActiveSelected === true) {
+      filteredRepo = filteredRepo.filter(todo => {return todo.isCompleted === false})
+  }
+
+  if(isCompletedSelected === true) {
+    filteredRepo = filteredRepo.filter(todo => {return todo.isCompleted === true})
+  }
+
+  if(isAllSelected === true) {
+    filteredRepo = Array.from(todoRepo)
+  }
+
   const { isDarkTheme } = useTheme();
 
-  const handleSubmit = useCallback(async () => {
-      formRef.current?.setErrors({});
+  function handleSubmit () {
+    const to_do = formRef.current.getFieldValue("to-do");
 
-      const to_do = formRef.current.getFieldValue("to-do");
+    const newToDo = {
+          id: uuid(),
+          todo: to_do,
+          isCompleted: false,
+        }
 
-      const newToDo = {
-        todo: to_do,
-        isCompleted: false,
-      }
+    setTodoRepo([newToDo, ...todoRepo]);
 
-      setTodoRepo([...todoRepo, newToDo]);
-  },[]);
+
+    formRef.current.reset()
+  }
+
+  const handleOnDragEnd = (result) => {
+    if(!result.destination) return;
+
+    const items = Array.from(todoRepo);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem)
+
+    setTodoRepo(items);
+  }
+
+
+  const handleClearCompleted = () => {
+    const tasks = Array.from(todoRepo);
+    const uncompletedTasks = tasks.filter(task => {
+      return task.isCompleted !== true;
+    })
+
+    setTodoRepo(uncompletedTasks);
+  }
+
 
   return (
     <section className={isDarkTheme ? styles. darkMain : styles.main}>
@@ -79,23 +118,50 @@ const Home: React.FC = () => {
         </Form>
 
         <div className={styles.containerTodo}>
-          <div className={styles.indexTodo} >
-            {todoRepo.map((todo, index) => (
-              <ToDos todo={todo.todo} isCompleted={todo.isCompleted} key={index} />
-            ))}
-          </div>
+          <DragDropContext onDragEnd={handleOnDragEnd}>
+            <Droppable droppableId="tasks">
+              {(provided) => (
+                  <ul className={styles.indexTodo} {...provided.droppableProps} ref={provided.innerRef}>
 
-          {/* <ToDos todo={'diahwdiowahd'} isCompleted={false} /> */}
 
+
+                    {filteredRepo.map(({ id, isCompleted, todo }, index) => (
+                      <Draggable key={id} draggableId={id} index={index}>
+                        {(provided) => (
+                          <li {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+                            <ToDos
+                              todo={todo}
+                              isCompleted={isCompleted}
+                              selector={id}
+                              forwardRef={provided.innerRef}
+                            />
+                          </li>
+                        )}
+                      </Draggable>
+                      ))}
+                      {provided.placeholder}
+                  </ul>
+              )}
+            </Droppable>
+          </DragDropContext>
           <div className={styles.footerTodo}>
-            <p>5 items left</p>
+            {todoRepo.length > 1
+            ? <p>{todoRepo.length} items left</p>
+            : <p>{todoRepo.length} item left</p>
+          }
+
             <div className={styles.filters}>
-              <p className={isAllSelected ? styles.selectedFilter : undefined} onClick={toggleAll}>All</p>
-              <p className={isActiveSelected ? styles.selectedFilter : undefined} onClick={toggleActive}>Active</p>
-              <p className={isCompletedSelected ? styles.selectedFilter : undefined} onClick={toggleCompleted}>Completed</p>
+              <p className={isAllSelected ? styles.selectedFilter : undefined} onClick={selectAll}>All</p>
+              <p className={isActiveSelected ? styles.selectedFilter : undefined} onClick={selectActive}>Active</p>
+              <p className={isCompletedSelected ? styles.selectedFilter : undefined} onClick={selectCompleted}>Completed</p>
             </div>
-            <p>Clear Completed</p>
+            <div onClick={handleClearCompleted}>
+              <p>Clear Completed</p>
+            </div>
           </div>
+        </div>
+        <div className={styles.reorder}>
+          <p>Drag and drop to reorder list</p>
         </div>
 
 
