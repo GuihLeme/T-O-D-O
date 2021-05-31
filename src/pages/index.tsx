@@ -1,18 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { parse, v4 as uuid } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-
 
 import Header from '../components/Header';
 import Input from '../components/Input';
 import ToDos from '../components/ToDos';
+import '../components/ThemeToggle';
 
 import { useTheme } from  '../hooks/theme';
 import { useRepo } from  '../hooks/repositories';
 
-import styles from '../styles/sass/Home.module.scss';
+import '../styles/sass/Home.module.scss';
 
 interface ToDoRepoData {
   todo: string;
@@ -26,7 +26,9 @@ const Home: React.FC = () => {
   const [isActiveSelected, setIsActiveSelected] = useState(false);
   const [isCompletedSelected, setIsCompletedSelected] = useState(false);
 
-  const { todoRepo, setTodoRepo} = useRepo();
+  const { todoRepo, setTodoRepo } = useRepo();
+  const { theme } = useTheme();
+
 
   const selectAll = () => {
     setIsAllSelected(true);
@@ -53,6 +55,7 @@ const Home: React.FC = () => {
   }, [todoRepo])
 
   let filteredRepo = Array.from(todoRepo);
+  const activeTodoRepo = todoRepo.filter(task => {return task.isCompleted === false})
 
   if(isActiveSelected === true) {
       filteredRepo = filteredRepo.filter(todo => {return todo.isCompleted === false})
@@ -66,21 +69,23 @@ const Home: React.FC = () => {
     filteredRepo = Array.from(todoRepo)
   }
 
-  const { isDarkTheme } = useTheme();
 
   function handleSubmit () {
     const to_do = formRef.current.getFieldValue("to-do");
 
-    const newToDo = {
-          id: uuid(),
-          todo: to_do,
-          isCompleted: false,
-        }
+    if(to_do != '') {
+      const newToDo = {
+            id: uuid(),
+            todo: to_do,
+            isCompleted: false,
+          }
 
-    setTodoRepo([newToDo, ...todoRepo]);
+      setTodoRepo([newToDo, ...todoRepo]);
 
 
-    formRef.current.reset()
+      formRef.current.reset()
+    }
+
   }
 
   const handleOnDragEnd = (result) => {
@@ -105,23 +110,23 @@ const Home: React.FC = () => {
 
 
   return (
-    <section className={isDarkTheme ? styles. darkMain : styles.main}>
-      {isDarkTheme
+    <section className={`main ${theme}`}>
+      {theme === 'dark'
       ? <img src="/bg-desktop-dark.jpg" alt="landscape" />
       : <img src="/bg-desktop-light.jpg" alt="landscape" />
       }
-      <div className={styles.container}>
+      <div className='container'>
         <Header />
 
         <Form ref={formRef} onSubmit={handleSubmit}>
           <Input name="to-do" />
         </Form>
 
-        <div className={styles.containerTodo}>
+        <div className='containerTodo'>
           <DragDropContext onDragEnd={handleOnDragEnd}>
             <Droppable droppableId="tasks">
               {(provided) => (
-                  <ul className={styles.indexTodo} {...provided.droppableProps} ref={provided.innerRef}>
+                  <ul className='indexTodo' {...provided.droppableProps} ref={provided.innerRef}>
 
 
 
@@ -144,23 +149,23 @@ const Home: React.FC = () => {
               )}
             </Droppable>
           </DragDropContext>
-          <div className={styles.footerTodo}>
-            {todoRepo.length > 1
-            ? <p>{todoRepo.length} items left</p>
-            : <p>{todoRepo.length} item left</p>
-          }
+          <div className='footerTodo'>
+            {activeTodoRepo.length > 1
+            ? <p>{activeTodoRepo.length} items left</p>
+            : <p>{activeTodoRepo.length} item left</p>
+            }
 
-            <div className={styles.filters}>
-              <p className={isAllSelected ? styles.selectedFilter : undefined} onClick={selectAll}>All</p>
-              <p className={isActiveSelected ? styles.selectedFilter : undefined} onClick={selectActive}>Active</p>
-              <p className={isCompletedSelected ? styles.selectedFilter : undefined} onClick={selectCompleted}>Completed</p>
+            <div className='filters'>
+              <p className={isAllSelected ? 'selectedFilter' : undefined} onClick={selectAll}>All</p>
+              <p className={isActiveSelected ? 'selectedFilter' : undefined} onClick={selectActive}>Active</p>
+              <p className={isCompletedSelected ? 'selectedFilter' : undefined} onClick={selectCompleted}>Completed</p>
             </div>
             <div onClick={handleClearCompleted}>
               <p>Clear Completed</p>
             </div>
           </div>
         </div>
-        <div className={styles.reorder}>
+        <div className='reorder'>
           <p>Drag and drop to reorder list</p>
         </div>
 

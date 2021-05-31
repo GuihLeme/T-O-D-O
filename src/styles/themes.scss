@@ -1,0 +1,17 @@
+.light {
+  --theme-page-background: hsl(236, 33%, 92%);
+  --theme-items-background: hsl(0, 0%, 98%);
+  --theme-page-text: hsl(235, 19%, 35%);
+  --theme-footer-text: hsl(236, 9%, 61%);
+  --theme-details: hsl(233, 11%, 84%);
+  --theme-hover: hsl(235, 19%, 35%);
+}
+
+.dark {
+  --theme-page-background: hsl(235, 21%, 11%);
+  --theme-items-background: hsl(235, 24%, 19%);
+  --theme-page-text: hsl(234, 39%, 85%);
+  --theme-footer-text: hsl(234, 11%, 52%);
+  --theme-details: hsl(233, 14%, 35%);
+  --theme-hover: hsl(236, 33%, 92%);
+}

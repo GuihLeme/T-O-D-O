@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 
 import { useRepo } from '../../hooks/repositories';
+import { useTheme } from '../../hooks/theme';
 
 import styles from './styles.module.scss';
 
@@ -19,7 +20,8 @@ interface ToDoRepo {
 const ToDos: React.FC<ToDoProps> = ({ selector, todo, isCompleted }, ...rest) => {
   const [isChecked, setIsChecked] = useState(isCompleted);
 
-  const { todoRepo, setTodoRepo } = useRepo();
+  const { todoRepo, setTodoRepo, handleDeleteTodo } = useRepo();
+  const { theme } = useTheme();
 
 
   const toggleCheckbox = useCallback(() => {
@@ -38,14 +40,14 @@ const ToDos: React.FC<ToDoProps> = ({ selector, todo, isCompleted }, ...rest) =>
   }, [isChecked, todoRepo])
 
   return (
-
-      <div className={styles.todo} {...rest}>
-        <div className={isChecked ? styles.checked : styles.checkbox} onClick={toggleCheckbox}>
+      <div className={`todo ${theme}`} {...rest}>
+        <div className={isChecked ? 'checked' : 'checkbox'} onClick={toggleCheckbox}>
           <svg xmlns="http://www.w3.org/2000/svg" width="11" height="9">
             <path fill="none" stroke="#FFF" strokeWidth="2" d="M1 4.304L3.696 7l6-6" />
           </svg>
         </div>
-        <p>{todo}</p>
+        <p className={isChecked ? 'completed' : undefined}>{todo}</p>
+        <span onClick={() => handleDeleteTodo(selector)}><img src="/icon-cross.svg" alt="delete" /></span>
       </div>
 
   )

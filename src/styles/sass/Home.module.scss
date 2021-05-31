@@ -1,11 +1,12 @@
 @import '../sass/conf';
 
-.darkMain,
 .main {
   width: 100%;
   height: 100vh;
 
   position: relative;
+  background: var(--theme-page-background);
+  color: var(--theme-page-text);
 
   > img {
     width: 100%;
@@ -13,17 +14,16 @@
 
     object-fit: cover;
 
-    position: absolute;
-    top: 0;
-    left: 0;
-
     z-index: -1;
   }
 
   .container {
     @include margin-page;
 
-    padding-top: 4.875rem;
+    position: absolute;
+    top: 4.875rem;
+    left: 50%;
+    transform: translateX(-50%);
 
     .indexTodo {
       > div:first-child {
@@ -35,10 +35,11 @@
 
       margin-top: 1.5rem;
       box-shadow: 0px 4px 6px 2px rgba($color: #000000, $alpha: .1);
+      border-radius: .25rem;
 
       ul {
         list-style: none;
-        border-radius: .25rem .25rem 0 0;
+        border-radius: .25rem;
 
 
         li:first-child {
@@ -48,7 +49,7 @@
         }
 
         li:not(:first-child) {
-          border-top: 1px solid var(--light-grayish-blue);
+          border-top: 1px solid var(--theme-details);
         }
       }
 
@@ -59,9 +60,9 @@
 
         width: 100%;
 
-        background: var(--very-light-gray);
-        color: var(--dark-grayish-blue);
-        border-top: 1px solid var(--light-grayish-blue);
+        background: var(--theme-items-background);
+        color: var(--theme-footer-text);
+        border-top: 1px solid var(--theme-details);
 
 
         padding: 1.125rem 1.5rem;
@@ -71,7 +72,7 @@
 
         p {
           &:hover {
-            color: var(--very-dark-grayish-blue-hover);
+            color: var(--theme-hover);
             cursor: pointer;
           }
         }
@@ -85,7 +86,7 @@
             font-weight: 700;
 
             &:hover {
-              color: var(--very-dark-grayish-blue-hover);
+              color: var(--theme-hover);
               cursor: pointer;
             }
 
@@ -108,8 +109,38 @@
 
       padding: 3rem;
 
+      color: var(--theme-footer-text);
+
       p {
         font-size: .75rem;
+      }
+    }
+
+    @media #{$BREAKPOINT-MOBILE} {
+      .footerTodo {
+        position: relative;
+
+        .filters {
+          position: absolute;
+          top: 5rem;
+          left: 0;
+
+          width: 100%;
+          height: 3rem;
+
+          background: var(--theme-items-background);
+          border-radius: .25rem;
+
+          box-shadow: 0px 4px 6px 2px rgba($color: #000000, $alpha: .1);
+
+          .selectedFilter {
+            color: var(--bright-blue);
+          }
+        }
+      }
+
+      .reorder {
+        margin-top: 4rem;
       }
     }
   }
