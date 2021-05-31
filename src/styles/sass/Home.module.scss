@@ -6,6 +6,7 @@
 
   position: relative;
   background: var(--theme-page-background);
+
   color: var(--theme-page-text);
 
   > img {
@@ -14,16 +15,18 @@
 
     object-fit: cover;
 
-    z-index: -1;
+    position: absolute;
+    z-index: 2;
+
   }
 
   .container {
     @include margin-page;
 
-    position: absolute;
-    top: 4.875rem;
-    left: 50%;
-    transform: translateX(-50%);
+    position: sticky;
+    z-index: 5;
+
+    padding-top: 4.875rem;
 
     .indexTodo {
       > div:first-child {
@@ -36,6 +39,7 @@
       margin-top: 1.5rem;
       box-shadow: 0px 4px 6px 2px rgba($color: #000000, $alpha: .1);
       border-radius: .25rem;
+      width: 100%;
 
       ul {
         list-style: none;

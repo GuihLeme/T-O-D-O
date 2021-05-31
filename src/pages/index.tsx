@@ -127,9 +127,6 @@ const Home: React.FC = () => {
             <Droppable droppableId="tasks">
               {(provided) => (
                   <ul className='indexTodo' {...provided.droppableProps} ref={provided.innerRef}>
-
-
-
                     {filteredRepo.map(({ id, isCompleted, todo }, index) => (
                       <Draggable key={id} draggableId={id} index={index}>
                         {(provided) => (
