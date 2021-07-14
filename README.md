@@ -7,7 +7,8 @@ This is a solution to the [Todo app challenge on Frontend Mentor](https://www.fr
 - [Overview](#overview)
   - [The challenge](#the-challenge)
   - [Links](#links)
-- [My process](#my-process)
+- [Running](#running)
+  - [Built with](#built-with)
   - [Built with](#built-with)
 - [Author](#author)
 
@@ -32,7 +33,19 @@ Users should be able to:
 - Solution URL: [Frontend Mentor](https://www.frontendmentor.io/solutions/react-js-nextjs-sass-react-beautiful-dnd-EGNytFSyQ)
 - Live Site URL: [Shorty](https://t-o-d-o.vercel.app/)
 
-## My process
+## Running
+
+Clone this repository, open its folder and install dependencies with:
+
+```sh
+yarn
+```
+
+Run it using:
+
+```sh
+yarn start
+```
 
 ### Built with
 
