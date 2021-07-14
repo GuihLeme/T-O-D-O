@@ -9,7 +9,6 @@ This is a solution to the [Todo app challenge on Frontend Mentor](https://www.fr
   - [Links](#links)
 - [Running](#running)
   - [Built with](#built-with)
-  - [Built with](#built-with)
 - [Author](#author)
 
 ## Overview
@@ -41,7 +40,7 @@ Clone this repository, open its folder and install dependencies with:
 yarn
 ```
 
-Run it using:
+Then, run it using:
 
 ```sh
 yarn start
