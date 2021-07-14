@@ -31,7 +31,7 @@ Users should be able to:
 ### Links
 
 - Solution URL: [Frontend Mentor](https://www.frontendmentor.io/solutions/react-js-nextjs-sass-react-beautiful-dnd-EGNytFSyQ)
-- Live Site URL: [Shorty](https://t-o-d-o.vercel.app/)
+- Live Site URL: [todo](https://t-o-d-o.vercel.app/)
 
 ## Running
 
